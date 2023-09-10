@@ -19,4 +19,8 @@ public class SyncDataJobWriter implements ItemWriter<BookDocument> {
         list.stream().forEach(bookDocument -> booksElasticSearchRepository.save(bookDocument));
     }
 
+//    @Override
+//    public void write(Chunk<? extends BookDocument> chunk) throws Exception {
+//        chunk.getItems().forEach(bookDocument -> booksElasticSearchRepository.save(bookDocument));
+//    }
 }

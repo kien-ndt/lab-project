@@ -1,8 +1,5 @@
 spring:
-  port: 9999
-  servlet:
-    multipart:
-      enabled: false
+  port: 8787
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/lab_project
     username: dev1
@@ -14,9 +11,11 @@ spring:
       dialect: org.hibernate.dialect.PostgreSQLDialect
   elasticsearch:
     rest:
-      uris: "http://localhost:9200"
+      uris: http://${ELASTICSEARCH_HOST:localhost}:${ELASTICSEARCH_PORT:5432}
       password: elastic
       username: 123456
   batch:
     jdbc:
       initialize-schema: always
+    job:
+      enabled: false
