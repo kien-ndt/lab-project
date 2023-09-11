@@ -21,7 +21,10 @@ public class SyncDataJobReader extends ItemStreamSupport implements ItemReader<B
 
     @Override
     public void open(ExecutionContext executionContext) {
-        iterator = booksRepository.findByUpdatedAtBefore(LocalDateTime.now()).iterator();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime timeStart = now.minusSeconds(10);
+//        iterator = booksRepository.findByUpdatedAtBetween(timeStart, now).iterator();
+        iterator = booksRepository.findByUpdatedAtBefore(now).iterator();
     }
 
     @Override

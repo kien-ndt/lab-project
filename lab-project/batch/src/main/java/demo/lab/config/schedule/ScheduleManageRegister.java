@@ -10,15 +10,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ScheduleManage {
+public class ScheduleManageRegister {
 
     @Autowired
     @Qualifier("syncDataJob")
-    Job syncdataJob;
+    private Job syncdataJob;
     @Autowired
     private JobLauncher jobLauncher;
 
-    @Scheduled(cron = "*/10 * * * * ?")
+    @Scheduled(cron = "*/5 * * * * ?")
     public void syncdataJobPerform() throws Exception {
         JobParameters params = new JobParametersBuilder()
                 .addString("JobRunTimeID", String.valueOf(System.currentTimeMillis()))

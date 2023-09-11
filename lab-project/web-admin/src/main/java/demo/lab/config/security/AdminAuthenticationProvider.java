@@ -2,7 +2,6 @@ package demo.lab.config.security;
 
 import demo.lab.db.entity.AccountEntity;
 import demo.lab.db.repository.AccountsRepository;
-import demo.lab.db.repository.RolesRepository;
 import demo.lab.security.authentication.AbstractUserPassAuthenticationProvider;
 import demo.lab.security.authentication.UserPrincipalDetails;
 import demo.lab.security.authorization.Role;
@@ -23,9 +22,6 @@ public class AdminAuthenticationProvider extends AbstractUserPassAuthenticationP
     private AccountsRepository accountsRepository;
 
     @Autowired
-    private RolesRepository rolesRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
@@ -35,10 +31,10 @@ public class AdminAuthenticationProvider extends AbstractUserPassAuthenticationP
         if (!passwordEncoder.matches(password, accountEntity.password)) {
             throw new BadCredentialsException("Not found");
         }
-
-        List<SimpleGrantedAuthority> simpleGrantedAuthorityList =
-                rolesRepository.findByAccountId(accountEntity.id).stream().map(roleEntity -> roleEntity.role != null ?
-                roleEntity.role : Role.UNKNOWN).distinct().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList());
+        if (accountEntity.role != Role.ADMIN) {
+            throw new BadCredentialsException("Not found");
+        }
+        List<SimpleGrantedAuthority> simpleGrantedAuthorityList = List.of(new SimpleGrantedAuthority(accountEntity.role.name()));
 
         UserPrincipalDetails userPrincipalDetails = new UserPrincipalDetails();
         userPrincipalDetails.email = username;

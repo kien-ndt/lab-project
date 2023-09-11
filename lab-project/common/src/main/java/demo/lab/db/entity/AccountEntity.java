@@ -1,5 +1,7 @@
 package demo.lab.db.entity;
 
+import demo.lab.security.authorization.Role;
+
 import javax.persistence.*;
 
 @Entity(name = "accounts")
@@ -9,4 +11,6 @@ public class AccountEntity {
     public Integer id;
     public String email;
     public String password;
+    @Enumerated(value = EnumType.STRING)
+    public Role role;
 }

@@ -1,5 +1,6 @@
 package demo.lab.api.book.upload;
 
+import demo.lab.api.book.upload.model.UploadBooksResponse;
 import demo.lab.model.GenericResponse;
 import org.apache.commons.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class UploadBooksController {
     @Autowired
     private UploadBooksService uploadBooksService;
 
-    @PostMapping(value = "/v1/book/upload",  consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<GenericResponse> uploadBooksController(HttpServletRequest httpServletRequest) throws IOException, FileUploadException {
+    @PostMapping(value = "/v1/admin/book/upload",  consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<UploadBooksResponse> uploadBooksController(HttpServletRequest httpServletRequest) throws IOException, FileUploadException {
         return ResponseEntity.status(HttpStatus.CREATED).body(uploadBooksService.uploadBooks(httpServletRequest));
     }
 

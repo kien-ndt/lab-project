@@ -1,5 +1,6 @@
 package demo.lab.api.book.upload;
 
+import demo.lab.api.book.upload.model.UploadBooksResponse;
 import demo.lab.api.book.upload.service.UploadBooksExecuteService;
 import demo.lab.exception.GenericRuntimeException;
 import demo.lab.model.GenericResponse;
@@ -20,16 +21,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class UploadBooksService {
 
     private static final String FIELD_NAME = "books";
 
+    private static final String CSV_SPLIT = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
+
     @Autowired
     private UploadBooksExecuteService uploadBooksExecuteService;
 
-    public GenericResponse uploadBooks(HttpServletRequest request) throws IOException, FileUploadException {
+    public UploadBooksResponse uploadBooks(HttpServletRequest request) throws IOException, FileUploadException {
 
         ServletFileUpload servletFileUpload = new ServletFileUpload();
         FileItemIterator itemIterator = servletFileUpload.getItemIterator(request);
@@ -50,11 +54,9 @@ public class UploadBooksService {
                     String line = bufferedReader.readLine();
                     List<List<String>> elementsList = new ArrayList<>();
                     while ((line = bufferedReader.readLine()) != null) {
-                        String[] elementArr = line.split("\";\"");
-                        elementArr[0] = elementArr[0].substring(1);
-                        elementArr[elementArr.length - 1] = elementArr[elementArr.length - 1].substring(0, elementArr[elementArr.length - 1].length() - 1);
+                        String[] elementArr = line.split(CSV_SPLIT);
                         elementsList.add(Arrays.asList(elementArr));
-                        if (elementsList.size() > 1000) {
+                        if (elementsList.size() >= 1000) {
                             count += uploadBooksExecuteService.saveBooks(elementsList);
                             elementsList.clear();
                         }
@@ -64,7 +66,9 @@ public class UploadBooksService {
                 }
             }
         }
-        return new GenericResponse("Uploaded: " + count);
+        UploadBooksResponse response = new UploadBooksResponse();
+        response.count = count;
+        return response;
     }
 
 }

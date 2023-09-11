@@ -1,5 +1,6 @@
 package demo.lab.api.book.list;
 
+import demo.lab.api.book.list.model.GetListBooksResponse;
 import demo.lab.db.entity.BookEntity;
 import demo.lab.db.repository.BooksRepository;
 import demo.lab.elasticsearch.document.BookDocument;
@@ -17,16 +18,11 @@ import java.util.List;
 public class GetListBooksController {
 
     @Autowired
-    private BooksElasticSearchRepository booksElasticSearchRepository;
+    private GetListBooksService getListBooksService;
 
-    @GetMapping("/v1/book")
-    public ResponseEntity<List<BookDocument>> getListBooksController() {
-        Iterator<BookDocument> bookDocumentIterator = booksElasticSearchRepository.findAll().iterator();
-        List<BookDocument> bookDocumentList = new ArrayList<>();
-        while (bookDocumentIterator.hasNext()) {
-            bookDocumentList.add(bookDocumentIterator.next());
-        }
-        return ResponseEntity.ok(bookDocumentList);
+    @GetMapping("/v1/admin/book")
+    public ResponseEntity<GetListBooksResponse> getListBooksController() {
+        return ResponseEntity.ok(getListBooksService.getListBooks());
     }
 
 }
