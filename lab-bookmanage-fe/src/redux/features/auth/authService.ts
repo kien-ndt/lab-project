@@ -1,26 +1,23 @@
+import { fetcher } from '@/utils/fetcher';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { LoginRequest } from './authModel';
-import { GenericErrorResponse } from '../model';
 
 export const login = createAsyncThunk<
   void,
   LoginRequest,
-  { rejectValue: { message: string } }
->('todoList/getTodos', async (loginRequest, thunkApi) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/login`, {
-    method: 'POST',
-    body: JSON.stringify(loginRequest),
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
-  });
-  const jsonData = await response.json();
-  if (response.status >= 400) {
-    const errorResponse: GenericErrorResponse =
-      jsonData as GenericErrorResponse;
+  { rejectValue: { message: string; status: number } }
+>('admin/login', async (loginRequest, thunkApi) => {
+  try {
+    const res = await fetcher(
+      '/admin/login',
+      'POST',
+      JSON.stringify(loginRequest),
+    );
+    return res;
+  } catch (err: any) {
     return thunkApi.rejectWithValue({
-      message: errorResponse?.message,
+      message: err.errBody.message,
+      status: err.status,
     });
   }
-  return jsonData;
 });

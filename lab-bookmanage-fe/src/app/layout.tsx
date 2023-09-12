@@ -1,10 +1,10 @@
+import { FallBackComponent } from '@/components/common/fallback/FallBackComponent';
 import { ThemeProvider } from '@/libs/emotion';
-import './globals.css';
+import { ReduxProvider } from '@/redux/provider';
+import { muiTheme } from '@/styles/theme';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { muiTheme } from '@/styles/theme';
-import { store } from '@/redux/store';
-import { ReduxProvider } from '@/redux/provider';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +22,9 @@ export default function RootLayout({
     <html lang="vi">
       <body className={inter.className}>
         <ReduxProvider>
-          <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
+          <ThemeProvider theme={muiTheme}>
+            <FallBackComponent>{children}</FallBackComponent>
+          </ThemeProvider>
         </ReduxProvider>
       </body>
     </html>

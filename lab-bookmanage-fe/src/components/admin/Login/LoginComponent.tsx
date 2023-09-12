@@ -1,21 +1,21 @@
 'use client';
 
+import { login } from '@/redux/features/auth/authService';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoadingButton } from '@mui/lab';
 import {
+  Alert,
   Box,
-  Button,
   FormControl,
   Paper,
   TextField,
   Typography,
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { login } from '@/redux/features/auth/authService';
-import { useEffect, useState } from 'react';
-import { LoadingButton } from '@mui/lab';
 
 const LoginFormSchema = z.object({
   username: z.string().nonempty({ message: 'Không được bỏ trống' }),
@@ -40,12 +40,7 @@ export const LoginComponent = () => {
 
   const dispatch = useAppDispatch();
   const loginFetchStatus = useAppSelector((state) => state.authReducer);
-
-  useEffect(() => {
-    if (loginFetchStatus.data) {
-      console.log('login thanh cong');
-    }
-  }, [loginFetchStatus.data]);
+  const router = useRouter();
 
   return (
     <Box
@@ -70,9 +65,18 @@ export const LoginComponent = () => {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Đăng nhập admin
         </Typography>
+        {loginFetchStatus.error && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {loginFetchStatus.error?.message}
+          </Alert>
+        )}
         <FormControl
           onSubmit={handleSubmit((data) => {
-            dispatch(login(data));
+            dispatch(login(data)).then((data) => {
+              if (data.type.endsWith('fulfilled')) {
+                router.push('/admin/dashboard');
+              }
+            });
           })}
           component={'form'}
         >

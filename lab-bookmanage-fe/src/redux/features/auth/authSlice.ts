@@ -13,7 +13,6 @@ interface AuthState {
 
 const initialState: AuthState = {
   isLoading: false,
-  error: {},
 };
 
 export const authSlice = createSlice({
