@@ -2,6 +2,7 @@
 
 import commonSlice from '@/redux/features/common/commonSlice';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
@@ -20,18 +21,15 @@ export const FallBackComponent = (props: Props) => {
         router.push(commonStatus.error.navigator.redirectUrl);
       }
     }
-    console.log(commonStatus);
   }, [commonStatus]);
 
-  // if (commonStatus?.error?.navigator?.redirectUrl) {
-  //   dispatch(commonSlice.actions.resetRedirect());
-  //   return null;
-  // } else {
-  if (commonStatus?.error?.navigator?.show404) {
-    dispatch(commonSlice.actions.resetRedirect());
-    // return <Box>404 Not found</Box>;
-  }
-  // }
-
-  return <>{props.children}</>;
+  return (
+    <>
+      {commonStatus?.error?.navigator?.show404 ? (
+        <Box>404 Not found</Box>
+      ) : (
+        props.children
+      )}
+    </>
+  );
 };

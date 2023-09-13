@@ -9,11 +9,11 @@ import java.util.List;
 public interface GetListBooksRepository extends JpaRepository<BookEntity, Integer> {
 
     @Query(value = " " +
-            " select t1.title, t2.name as author, t3.label as category" +
+            " select t1.id, t1.title, t2.name as author, t3.label as category" +
             " from books t1" +
-            " join authors t2 on t1.authorId = t2.id" +
-            " join categories t3 on t1.categoryId = t3.id" +
-            " order by t1.createdAt desc, t1.id desc", nativeQuery = true)
-    List<GetListBooksEntity> findAllBooks();
+            " join authors t2 on t1.author_id = t2.id" +
+            " join categories t3 on t1.category_id = t3.id" +
+            " order by t1.created_at desc, t1.id desc", nativeQuery = true)
+    List<GetListBooksInterface> findAllBooks();
 
 }

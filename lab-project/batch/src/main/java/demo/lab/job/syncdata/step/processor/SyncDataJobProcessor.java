@@ -19,12 +19,12 @@ public class SyncDataJobProcessor implements ItemProcessor<BookEntity, BookDocum
 
     @Override
     public BookDocument process(BookEntity bookEntity) throws Exception {
-        ;
         BookDocument bookDocument = new BookDocument();
         bookDocument.id = bookEntity.id;
         bookDocument.title = bookEntity.title;
         bookDocument.author = authorsRepository.findById(bookEntity.authorId).orElseThrow().name;
         bookDocument.category = categoriesRepository.findById(bookEntity.categoryId).orElseThrow().label;
+        bookDocument.createdAt = bookEntity.createdAt;
         return bookDocument;
     }
 }

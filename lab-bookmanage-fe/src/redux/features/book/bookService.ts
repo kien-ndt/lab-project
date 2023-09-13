@@ -10,7 +10,6 @@ export const adminBookGet = createAsyncThunk<
 >('admin/book', async (args, thunkApi) => {
   try {
     const res = await fetcher('/admin/book', 'GET');
-    console.log(res);
     return res;
   } catch (err: any) {
     if (err.status === 403) {

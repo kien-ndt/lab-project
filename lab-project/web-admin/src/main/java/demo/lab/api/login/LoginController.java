@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class LoginController {
 
-    @PostMapping("/v1/login")
+    @PostMapping("/v1/admin/login")
     public String login(@RequestBody LoginRequest loginRequest, HttpServletRequest httpServletRequest, RedirectAttributes redirectAttributes) {
         httpServletRequest.setAttribute("username", loginRequest.username);
         httpServletRequest.setAttribute("password", loginRequest.password);
