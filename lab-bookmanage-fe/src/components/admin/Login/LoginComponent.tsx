@@ -74,7 +74,7 @@ export const LoginComponent = () => {
           onSubmit={handleSubmit((data) => {
             dispatch(login(data)).then((data) => {
               if (data.type.endsWith('fulfilled')) {
-                router.push('/admin/dashboard');
+                router.push('/admin/book');
               }
             });
           })}

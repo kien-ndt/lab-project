@@ -3,6 +3,7 @@ server:
     session:
       cookie:
         name: "SESSION_ADMIN"
+spring:
   datasource:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/lab_project
     username: dev1
