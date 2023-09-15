@@ -1,7 +1,8 @@
 'use client';
 
-import { login } from '@/redux/features/auth/authService';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { adminAuthApi } from '@/redux/features/admin/auth/adminAuthService';
+import { GenericErrorResponse } from '@/redux/features/model';
+import { useErrorHandler } from '@/utils/useErrorHandler';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoadingButton } from '@mui/lab';
 import {
@@ -14,6 +15,7 @@ import {
 } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -38,9 +40,22 @@ export const LoginComponent = () => {
     },
   });
 
-  const dispatch = useAppDispatch();
-  const loginFetchStatus = useAppSelector((state) => state.authReducer);
+  const [login, statusLogin] = adminAuthApi.useLoginMutation();
+
+  const [errorHandle] = useErrorHandler<GenericErrorResponse>(
+    statusLogin.error,
+  );
+
   const router = useRouter();
+  const handleSubmitForm = handleSubmit((data: LoginFormInput) => {
+    login(data);
+  });
+
+  useEffect(() => {
+    if (statusLogin.isSuccess) {
+      router.push('/admin/book');
+    }
+  }, [statusLogin.isSuccess]);
 
   return (
     <Box
@@ -65,21 +80,12 @@ export const LoginComponent = () => {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Đăng nhập admin
         </Typography>
-        {loginFetchStatus.error && (
+        {errorHandle && (
           <Alert severity="error" sx={{ mb: 3 }}>
-            {loginFetchStatus.error?.message}
+            {errorHandle.message}
           </Alert>
         )}
-        <FormControl
-          onSubmit={handleSubmit((data) => {
-            dispatch(login(data)).then((data) => {
-              if (data.type.endsWith('fulfilled')) {
-                router.push('/admin/book');
-              }
-            });
-          })}
-          component={'form'}
-        >
+        <FormControl onSubmit={handleSubmitForm} component={'form'}>
           <TextField
             label="Tên đăng nhập"
             sx={{ mb: 3, width: '256px' }}
@@ -98,7 +104,7 @@ export const LoginComponent = () => {
           <LoadingButton
             variant="contained"
             type="submit"
-            loading={loginFetchStatus.isLoading}
+            loading={statusLogin.isLoading}
           >
             Đăng nhập
           </LoadingButton>

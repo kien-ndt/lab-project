@@ -7,6 +7,7 @@ export const muiTheme = createTheme({
     fontFamily: 'Roboto',
     button: {
       fontSize: '1rem',
+      textTransform: 'none',
     },
   },
 });
