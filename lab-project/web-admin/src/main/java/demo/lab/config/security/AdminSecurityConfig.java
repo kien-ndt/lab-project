@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class AdminSecurityConfig implements GeneralSecurityConfig {
     @Override
     public String[] getAllowEndpoints() {
-        return new String[]{"/v1/admin/login"};
+        return new String[]{"/v1/admin/login", "/v1/admin/logout"};
     }
 
     @Override

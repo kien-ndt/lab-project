@@ -28,15 +28,19 @@ export const commonSlice = createSlice({
   reducers: {
     redirectAdminLogin(state) {
       state.error = { navigator: { redirectUrl: '/admin' } };
+      state.modal = {};
     },
     redirectUserLogin(state) {
       state.error = {};
+      state.modal = {};
     },
     redirect404(state) {
       state.error = { navigator: { show404: true } };
+      state.modal = {};
     },
     resetRedirect(state) {
       state.error = { navigator: undefined };
+      state.modal = {};
     },
     openModal(
       state,

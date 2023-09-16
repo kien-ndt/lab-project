@@ -1,3 +1,4 @@
+import { adminAccountApi } from './features/admin/account/adminAccountService';
 import { adminAuthApi } from './features/admin/auth/adminAuthService';
 import { adminBookApi } from './features/admin/book/adminBookService';
 import { authSlice } from './features/auth/authSlice';
@@ -10,6 +11,7 @@ const reducer = {
   [bookSlice.name]: bookSlice.reducer,
   [adminBookApi.reducerPath]: adminBookApi.reducer,
   [adminAuthApi.reducerPath]: adminAuthApi.reducer,
+  [adminAccountApi.reducerPath]: adminAccountApi.reducer,
 };
 
 export default reducer;

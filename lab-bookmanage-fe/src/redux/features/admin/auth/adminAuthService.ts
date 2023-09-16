@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { GenericErrorResponse } from '../../model';
+import { GenericErrorResponse, GenericResponse } from '../../model';
 import { LoginRequest } from './adminAuthServiceModel';
 
 export const adminAuthApi = createApi({
@@ -15,6 +15,9 @@ export const adminAuthApi = createApi({
         method: 'POST',
         body: data,
       }),
+    }),
+    logout: builder.mutation<GenericResponse, void>({
+      query: () => '/logout',
     }),
   }),
 });

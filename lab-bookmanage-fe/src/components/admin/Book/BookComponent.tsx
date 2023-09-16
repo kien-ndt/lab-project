@@ -82,13 +82,15 @@ export const BookComponent = () => {
   };
   const handleOnDelete = (id: number) => {
     deleteBook(id);
-    resultDeleteBook.data &&
+  };
+
+  useEffect(() => {
+    if (resultDeleteBook.isSuccess) {
       dispatch(
         commonActions.showSuccessNotification(resultDeleteBook.data.message),
       );
-  };
-  useEffect(() => {
-    resultDeleteBook.isSuccess && getListBook(search);
+      getListBook(search);
+    }
   }, [resultDeleteBook.isSuccess]);
 
   const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
