@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CategoriesRepository extends JpaRepository<CategoryEntity, Integer> {
 
     @Query(value = "select * from categories where label in (:labelList)", nativeQuery = true)
     List<CategoryEntity> findByLabelInList(@Param("labelList") List<String> labelList);
+
+    Optional<CategoryEntity> findByLabel(String categoryLabel);
 }

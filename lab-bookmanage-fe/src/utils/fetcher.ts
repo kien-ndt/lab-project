@@ -4,7 +4,6 @@ export const fetcher = async (
   requestBody?: RequestInit['body'],
   headers?: RequestInit['headers'],
 ): Promise<any> => {
-  console.log(' asdasd');
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}${urlPath}`, {
     method: method,
     body: requestBody,

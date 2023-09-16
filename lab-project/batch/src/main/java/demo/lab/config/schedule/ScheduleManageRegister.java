@@ -21,7 +21,7 @@ public class ScheduleManageRegister {
     @Scheduled(cron = "*/5 * * * * ?")
     public void syncdataJobPerform() throws Exception {
         JobParameters params = new JobParametersBuilder()
-                .addString("JobRunTimeID", String.valueOf(System.currentTimeMillis()))
+                .addString("ExecuteTime", String.valueOf(System.currentTimeMillis()))
                 .toJobParameters();
         jobLauncher.run(syncdataJob, params);
     }

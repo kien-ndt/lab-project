@@ -9,5 +9,9 @@ export const muiTheme = createTheme({
       fontSize: '1rem',
       textTransform: 'none',
     },
+    h5: {
+      fontWeight: 700,
+      marginBottom: '16px',
+    },
   },
 });

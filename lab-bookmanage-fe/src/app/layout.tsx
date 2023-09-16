@@ -1,4 +1,5 @@
 import { FallBackComponent } from '@/components/common/fallback/FallBackComponent';
+import { Notification } from '@/components/common/notification/Notification';
 import { ThemeProvider } from '@/libs/emotion';
 import { ReduxProvider } from '@/redux/provider';
 import { muiTheme } from '@/styles/theme';
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReduxProvider>
           <ThemeProvider theme={muiTheme}>
+            <Notification />
             <FallBackComponent>{children}</FallBackComponent>
           </ThemeProvider>
         </ReduxProvider>

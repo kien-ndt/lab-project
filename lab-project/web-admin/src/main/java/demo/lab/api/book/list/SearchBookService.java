@@ -1,7 +1,5 @@
-package demo.lab.api.book.search;
+package demo.lab.api.book.list;
 
-import demo.lab.api.book.search.model.SearchBookResponse;
-import demo.lab.api.book.search.model.SearchBookResponse.SearchBookEntity;
 import demo.lab.elasticsearch.document.BookDocument;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
@@ -22,28 +20,22 @@ public class SearchBookService {
     @Autowired
     private ElasticsearchOperations elasticsearchOperations;
 
-    public SearchBookResponse searchBook(String queryText) {
+    public List<Integer> searchBook(String queryText) {
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder()
                 .must(new QueryStringQueryBuilder(queryText + "*").defaultField("title"));
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .build();
 
-        List<SearchBookEntity> searchBookEntityList = new ArrayList<>();
+        List<Integer> searchBookIdList = new ArrayList<>();
 
         SearchHits<BookDocument> bookDocumentSearchHits = elasticsearchOperations.search(searchQuery,
                 BookDocument.class, IndexCoordinates.of("books"));
         bookDocumentSearchHits.stream().forEach(bookDocumentSearchHit -> {
             BookDocument bookDocument = bookDocumentSearchHit.getContent();
-            SearchBookEntity searchBookEntity = new SearchBookEntity();
-            searchBookEntity.title = bookDocument.title;
-            searchBookEntity.author = bookDocument.author;
-            searchBookEntity.category = bookDocument.category;
-            searchBookEntityList.add(searchBookEntity);
+            searchBookIdList.add(bookDocument.id);
         });
-        SearchBookResponse searchBookResponse = new SearchBookResponse();
-        searchBookResponse.bookList = searchBookEntityList;
-        return searchBookResponse;
+        return searchBookIdList;
     }
 
 }
