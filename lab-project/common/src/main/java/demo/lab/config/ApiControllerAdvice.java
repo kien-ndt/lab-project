@@ -23,7 +23,7 @@ public class ApiControllerAdvice {
     @ExceptionHandler({Exception.class})
     public ResponseEntity<GenericResponse> exceptionHandler(Exception exception) {
         LOGGER.error(exception.getMessage(), exception);
-        GenericResponse genericResponse = new GenericResponse(exception.getMessage());
+        GenericResponse genericResponse = new GenericResponse("Có lỗi xảy ra");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(genericResponse);
     }
 

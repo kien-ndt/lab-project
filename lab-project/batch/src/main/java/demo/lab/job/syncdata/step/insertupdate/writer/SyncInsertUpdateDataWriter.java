@@ -1,4 +1,4 @@
-package demo.lab.job.syncdata.step.writer;
+package demo.lab.job.syncdata.step.insertupdate.writer;
 
 import demo.lab.elasticsearch.document.BookDocument;
 import demo.lab.elasticsearch.repository.BooksElasticSearchRepository;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SyncDataJobWriter implements ItemWriter<BookDocument> {
+public class SyncInsertUpdateDataWriter implements ItemWriter<BookDocument> {
 
     @Autowired
     private BooksElasticSearchRepository booksElasticSearchRepository;

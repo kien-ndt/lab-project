@@ -1,7 +1,10 @@
-package demo.lab.job.syncdata.step.reader;
+package demo.lab.job.syncdata.step.insertupdate.reader;
 
 import demo.lab.db.entity.BookEntity;
 import demo.lab.db.repository.BooksRepository;
+import demo.lab.elasticsearch.document.ManageUpdateDocument;
+import demo.lab.elasticsearch.repository.ManageUpdateElasticSearchRepository;
+import demo.lab.model.ManageDocumentEnum;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemReader;
@@ -17,20 +20,31 @@ import java.util.TimeZone;
 
 @StepScope
 @Service
-public class SyncDataJobReader extends ItemStreamSupport implements ItemReader<BookEntity> {
+public class SyncInsertUpdateDataReader extends ItemStreamSupport implements ItemReader<BookEntity> {
 
     @Autowired
     private BooksRepository booksRepository;
+    @Autowired
+    private ManageUpdateElasticSearchRepository manageUpdateElasticSearchRepository;
 
     private Iterator<BookEntity> iterator;
     @Value("#{jobParameters['ExecuteTime']}")
     private Long executeTime;
+
     @Override
     public void open(ExecutionContext executionContext) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime timeStart = LocalDateTime.ofInstant(Instant.ofEpochMilli(executeTime), TimeZone.getDefault().toZoneId());
-//        iterator = booksRepository.findByUpdatedAtBetween(timeStart, now).iterator();
-        iterator = booksRepository.findByUpdatedAtBefore(now).iterator();
+        LocalDateTime currentTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(executeTime),
+                TimeZone.getDefault().toZoneId());
+        ManageUpdateDocument manageUpdateDocument =
+                manageUpdateElasticSearchRepository.findById(ManageDocumentEnum.BOOK.id).orElse(null);
+        LocalDateTime startTime;
+        if (manageUpdateDocument == null) {
+            startTime = currentTime.minusYears(1l);
+        } else {
+            startTime = manageUpdateDocument.lastUpdatedAt;
+        }
+
+        iterator = booksRepository.findByUpdatedAtBetween(startTime, currentTime).iterator();
     }
 
     @Override

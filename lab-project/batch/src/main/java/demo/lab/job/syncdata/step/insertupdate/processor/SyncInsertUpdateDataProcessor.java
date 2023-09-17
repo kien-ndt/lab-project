@@ -1,4 +1,4 @@
-package demo.lab.job.syncdata.step.processor;
+package demo.lab.job.syncdata.step.insertupdate.processor;
 
 import demo.lab.db.entity.BookEntity;
 import demo.lab.db.repository.AuthorsRepository;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SyncDataJobProcessor implements ItemProcessor<BookEntity, BookDocument> {
+public class SyncInsertUpdateDataProcessor implements ItemProcessor<BookEntity, BookDocument> {
 
     @Autowired
     private AuthorsRepository authorsRepository;
@@ -18,7 +18,7 @@ public class SyncDataJobProcessor implements ItemProcessor<BookEntity, BookDocum
     private CategoriesRepository categoriesRepository;
 
     @Override
-    public BookDocument process(BookEntity bookEntity) throws Exception {
+    public BookDocument process(BookEntity bookEntity) {
         BookDocument bookDocument = new BookDocument();
         bookDocument.id = bookEntity.id;
         bookDocument.title = bookEntity.title;

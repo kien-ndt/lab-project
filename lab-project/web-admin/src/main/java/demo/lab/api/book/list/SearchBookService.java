@@ -2,6 +2,7 @@ package demo.lab.api.book.list;
 
 import demo.lab.elasticsearch.document.BookDocument;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -22,7 +23,7 @@ public class SearchBookService {
 
     public List<Integer> searchBook(String queryText) {
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder()
-                .must(new QueryStringQueryBuilder(queryText + "*").defaultField("title"));
+                .must(new QueryStringQueryBuilder(queryText).defaultField("title"));
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .build();

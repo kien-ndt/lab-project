@@ -25,7 +25,8 @@ export const AccountComponent = () => {
   const dispatch = useAppDispatch();
 
   const resultGetListAccount = adminAccountApi.useGetListAccountQuery();
-  useErrorHandler(resultGetListAccount.error);
+
+  useErrorHandler(resultGetListAccount.error, resultGetListAccount.isFetching);
 
   const openModalCreateAccount = () => {
     dispatch(commonActions.openModal(MODAL_CREATE_ACCOUNT));

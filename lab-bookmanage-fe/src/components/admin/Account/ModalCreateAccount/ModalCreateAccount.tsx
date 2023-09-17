@@ -48,6 +48,9 @@ export const ModalCreateAccount = (props: Props) => {
   } = useForm<ModalCreateAccountInput>({
     resolver: zodResolver(ModalCreateAccountSchema),
     mode: 'onBlur',
+    defaultValues: {
+      role: '',
+    },
   });
 
   const dispatch = useAppDispatch();
@@ -113,12 +116,13 @@ export const ModalCreateAccount = (props: Props) => {
         <FormControl fullWidth error={!!errors.role?.message} sx={{ mb: 2 }}>
           <InputLabel>Quyền hạn</InputLabel>
           <Select label="Quyền hạn" {...register('role')}>
+            <MenuItem value={''}>&nbsp;</MenuItem>
             <MenuItem value={'ADMIN'}>ADMIN</MenuItem>
             <MenuItem value={'USER'}>USER</MenuItem>
-            {!!errors.role && (
-              <FormHelperText>{errors.role.message}</FormHelperText>
-            )}
           </Select>
+          {!!errors.role && (
+            <FormHelperText>{errors.role.message}</FormHelperText>
+          )}
         </FormControl>
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button
