@@ -1,3 +1,13 @@
+def removeBE(USERNAME, PASSWORD, HOST) {
+  sh "sshpass -p ${PASSWORD} ssh -o StrictHostKeyChecking=no ${USERNAME}@${HOST} kill -9 \$(cat web-admin.pid || true) || true"
+  sh "sshpass -p ${PASSWORD} ssh -o StrictHostKeyChecking=no ${USERNAME}@${HOST} rm web-admin.pid web-admin.jar || true"
+  // '''
+  //   sshpass -p "${PASSWORD}" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "kill -9 `cat web-admin.pid; rm web-admin.pid web-admin.jar`"
+
+  // '''
+}
+
+
 pipeline {
   agent any
   tools {
@@ -52,11 +62,31 @@ pipeline {
     //     }
     //   }
     // }    
-    stage('Deploy') {
+    stage('Package jar') {
       steps {
-          sshagent (credentials: ['ssh_credential_web-admin']) {
-            sh 'ssh -o StrictHostKeyChecking=no -p 30022 -l kienndt 127.0.0.1 date'
-          }
+        sh '''
+          cd lab-project
+          mvn package spring-boot:repackage -pl web-admin
+          mvn package spring-boot:repackage -pl web-user
+        '''
+      }
+    }
+    stage('Deploy') {
+      environment {
+        SSH_ACCOUNT = credentials('server_username_password')
+        HOST = credentials('server_ip')
+      }
+      steps {
+        sh '''
+          cd lab-project
+          sshpass -p "${SSH_ACCOUNT_PSW}" scp web-admin/target/web-admin.jar $SSH_ACCOUNT_USR@$HOST:/home/kienndt
+          sshpass -p "${SSH_ACCOUNT_PSW}" ssh -o StrictHostKeyChecking=no $SSH_ACCOUNT_USR@$HOST "java -jar web-admin.jar > /dev/null && echo $! > web-admin.pid"
+        '''
+      }
+      post {
+        failure {
+            removeBE('${SSH_ACCOUNT_USR}', '${SSH_ACCOUNT_PSW}', '${HOST}')
+        }
       }
     }
   }

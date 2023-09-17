@@ -1,5 +1,7 @@
 package demo.lab.api.book.upload;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import demo.lab.api.book.upload.model.UploadBooksRequest;
 import demo.lab.api.book.upload.model.UploadBooksResponse;
 import demo.lab.api.book.upload.service.UploadBooksExecuteService;
@@ -22,6 +24,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -33,14 +36,15 @@ public class UploadBooksService {
     @Autowired
     private UploadBooksExecuteService uploadBooksExecuteService;
 
-    public UploadBooksResponse uploadBooks(MultipartFile file) throws IOException, FileUploadException {
+    public UploadBooksResponse uploadBooks(MultipartFile file) throws IOException, FileUploadException, CsvValidationException {
         int count = 0;
         try(InputStream inputStream = file.getInputStream()) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-            String line = bufferedReader.readLine();
+            CSVReader csvReader = new CSVReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            csvReader.skip(1);
+            Iterator<String[]> lines = csvReader.iterator();
             List<List<String>> elementsList = new ArrayList<>();
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] elementArr = line.split(CSV_SPLIT);
+            while (lines.hasNext()) {
+                String[] elementArr = lines.next();
                 elementsList.add(Arrays.asList(elementArr));
                 if (elementsList.size() >= 1000) {
                     count += uploadBooksExecuteService.saveBooks(elementsList);
