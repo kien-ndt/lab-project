@@ -2,6 +2,9 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 
 interface CommonState {
+  auth: {
+    isAuth: boolean;
+  };
   error?: {
     navigator?: {
       redirectUrl?: string;
@@ -20,7 +23,7 @@ interface CommonState {
   };
 }
 
-const initialState: CommonState = { modal: {} };
+const initialState: CommonState = { modal: {}, auth: { isAuth: false } };
 
 export const commonSlice = createSlice({
   name: 'commonReducer',
@@ -70,6 +73,9 @@ export const commonSlice = createSlice({
     },
     hiddenNotification(state) {
       state.notification = undefined;
+    },
+    setAuth(state, isAuth: PayloadAction<boolean>) {
+      state.auth = { isAuth: isAuth.payload };
     },
   },
 });
