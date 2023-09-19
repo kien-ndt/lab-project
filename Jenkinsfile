@@ -1,10 +1,6 @@
 def removeBE(USERNAME, PASSWORD, HOST) {
   sh "sshpass -p ${PASSWORD} ssh -o StrictHostKeyChecking=no ${USERNAME}@${HOST} kill -9 \$(cat web-admin.pid || true) || true"
   sh "sshpass -p ${PASSWORD} ssh -o StrictHostKeyChecking=no ${USERNAME}@${HOST} rm web-admin.pid web-admin.jar || true"
-  // '''
-  //   sshpass -p "${PASSWORD}" ssh -o StrictHostKeyChecking=no $USERNAME@$HOST "kill -9 `cat web-admin.pid; rm web-admin.pid web-admin.jar`"
-
-  // '''
 }
 
 
@@ -30,38 +26,38 @@ pipeline {
         '''
       }
     }
-    // stage('Sonar verify') {
-    //   steps {
+    stage('Sonar verify') {
+      steps {
 
-    //     sh '''
-    //       cd lab-project
-    //       echo "sonar.projectKey=lab-project" >> sonar-project.properties
-    //       echo "sonar.language=java" >> sonar-project.properties
-    //       echo "sonar.modules=common,security,web-admin,web-user" >> sonar-project.properties
-    //       echo "sonar.projectVersion=${BUILD_NUMBER}" >> sonar-project.properties
+        sh '''
+          cd lab-project
+          echo "sonar.projectKey=lab-project" >> sonar-project.properties
+          echo "sonar.language=java" >> sonar-project.properties
+          echo "sonar.modules=common,security,web-admin,web-user" >> sonar-project.properties
+          echo "sonar.projectVersion=${BUILD_NUMBER}" >> sonar-project.properties
 
-    //       echo "common.sonar.sources=src/main/java" >> sonar-project.properties
-    //       echo "common.sonar.java.binaries=target/classes" >> sonar-project.properties
+          echo "common.sonar.sources=src/main/java" >> sonar-project.properties
+          echo "common.sonar.java.binaries=target/classes" >> sonar-project.properties
 
-    //       echo "security.sonar.sources=src/main/java" >> sonar-project.properties
-    //       echo "security.sonar.java.binaries=target/classes" >> sonar-project.properties
+          echo "security.sonar.sources=src/main/java" >> sonar-project.properties
+          echo "security.sonar.java.binaries=target/classes" >> sonar-project.properties
 
-    //       echo "web-admin.sonar.sources=src/main/java" >> sonar-project.properties
-    //       echo "web-admin.sonar.java.binaries=target/classes" >> sonar-project.properties
+          echo "web-admin.sonar.sources=src/main/java" >> sonar-project.properties
+          echo "web-admin.sonar.java.binaries=target/classes" >> sonar-project.properties
 
-    //       echo "web-user.sonar.sources=src/main/java" >> sonar-project.properties
-    //       echo "web-user.sonar.java.binaries=target/classes" >> sonar-project.properties
+          echo "web-user.sonar.sources=src/main/java" >> sonar-project.properties
+          echo "web-user.sonar.java.binaries=target/classes" >> sonar-project.properties
                    
-    //     '''
+        '''
 
-    //     withSonarQubeEnv(installationName: 'sonarqube_server', credentialsId: 'sonarqube_token') {
-    //         sh '''
-    //             cd lab-project
-    //             ${SONAR_SCANNER}/bin/sonar-scanner
-    //         '''
-    //     }
-    //   }
-    // }    
+        withSonarQubeEnv(installationName: 'sonarqube_server', credentialsId: 'sonarqube_token') {
+            sh '''
+                cd lab-project
+                ${SONAR_SCANNER}/bin/sonar-scanner
+            '''
+        }
+      }
+    }    
     stage('Package jar') {
       steps {
         sh '''

@@ -23,7 +23,9 @@ public class SyncInsertUpdateDataProcessor implements ItemProcessor<BookEntity, 
         bookDocument.id = bookEntity.id;
         bookDocument.title = bookEntity.title;
         bookDocument.author = authorsRepository.findById(bookEntity.authorId).orElseThrow().name;
+        bookDocument.author_keyword = bookDocument.author;
         bookDocument.category = categoriesRepository.findById(bookEntity.categoryId).orElseThrow().label;
+        bookDocument.category_keyword = bookDocument.category;
         bookDocument.createdAt = bookEntity.createdAt;
         return bookDocument;
     }

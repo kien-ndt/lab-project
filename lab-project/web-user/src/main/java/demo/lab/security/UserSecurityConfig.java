@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class UserSecurityConfig implements GeneralSecurityConfig {
     @Override
     public String[] getAllowEndpoints() {
-        return new String[]{"/v1/user/login", "/v1/user/logout", "/v1/book"};
+        return new String[]{"/v1/user/login", "/v1/user/logout", "/v1/book", "/v1/book/aggregation"};
     }
 
     @Override
